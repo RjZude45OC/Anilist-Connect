@@ -1,0 +1,124 @@
+body {
+  margin: 0;
+  padding: 0;
+  font-family: Roboto;
+  width: 300px;
+  height: 400px;
+  background-color: rgb(237, 241, 245);
+}
+
+.container {
+  padding: 0px 0px 40px 0px;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.title {
+  display: flex;
+  flex-direction: row;
+  text-align: center;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  color: #bcbedc;
+  background-color: rgb(21, 42, 64);
+}
+.title img {
+  padding-right: 10px;
+  width: 27px;
+  height: 27px;
+}
+.links {
+  display: flex;
+  flex-direction: column;
+  align-items: left;
+  width: 95%;
+  padding: 10px 0px 10px 0px;
+}
+.links p {
+  margin: 0;
+  padding: 4px;
+  background-color: #fafafa;
+  border-radius: 3px;
+  font-size: 14px;
+  font-weight: 430;
+  font-family: Roboto;
+}
+/* form */
+.link_form {
+  display: flex;
+  flex-direction: column;
+  width: 95%;
+}
+.link_form button {
+  border-radius: 3px;
+  margin-top: 15px;
+  width: 100%;
+  padding: 12px;
+  margin-top: 20px;
+  background-color: #3db4f2;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  font-family: Roboto;
+  font-size: 13px;
+}
+.link_form input {
+  margin: 0;
+  padding: 3px;
+  background-color: #fafafa;
+  border-radius: 3px;
+  font-size: 14px;
+  font-weight: 430;
+  font-family: Roboto;
+}
+/* dropdown */
+.dropdown {
+  margin-top: 10px;
+  width: 95%;
+}
+.dropdown select {
+  width: 100%;
+  padding: 12px;
+  margin-top: 15px;
+  background-color: #fafafa;
+  border: none;
+  border-radius: 3px;
+  font-family: Roboto;
+  font-size: 13px;
+  cursor: pointer;
+}
+.dropdown label {
+  font-size: 14px;
+  font-weight: 430;
+  font-family: Roboto;
+}
+.dropdown_buttons{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+.dropdown_buttons button {
+    border-radius: 3px;
+    margin-top: 15px;
+    width: 45%;
+    padding: 12px;
+    margin-top: 20px;
+    background-color: #3db4f2;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    font-family: Roboto;
+    font-size: 13px;
+  }
+  span{
+    margin-top: 10px;
+    font-family: Roboto;
+    font-size: 13px;
+    color: #5c728a;
+    border: none;
+    cursor: pointer;
+    font-weight: 430;
+  }

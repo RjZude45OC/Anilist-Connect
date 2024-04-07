@@ -1,0 +1,14 @@
+{
+    "manifest_version": 3,
+    "name": "Anilist Connect",
+    "description": "Manually link external pages to specific pages on anilist.co",
+    "version": "1.0",
+    "action": {
+      "default_popup": "main.html",
+      "default_icon": "image.png"
+    },
+    "permissions": [
+        "tabs",
+        "storage"
+      ]
+  }
