@@ -2,10 +2,10 @@ const anilist_Check =
   /https?:\/\/(www\.)?anilist\.co\/(anime|manga)\/(\d+)\/([a-zA-Z0-9-]+)/i;
 const inputUrl_Check =
   /[(http(s)?):\/\/(www\.)?a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/i;
+var dataArray = [];
 chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
   var currentTab = tabs[0];
   let currentTabUrl = currentTab.url;
-  console.log(currentTabUrl);
   var match = currentTabUrl.match(anilist_Check);
   if (match) {
     document.getElementById("anilist_link").textContent = currentTabUrl;
@@ -26,6 +26,10 @@ chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
       event.preventDefault();
       handleSubmit(currentTabUrl);
     });
+  document.getElementById("remove").addEventListener("click", function (event) {
+    event.preventDefault();
+    clearStore();
+  });
 });
 
 // Function to handle form submission
@@ -42,7 +46,27 @@ function handleSubmit(currentTabUrl) {
     inputErrorTooltip.textContent = "Invalid Link To Connect";
   } else {
     let externalLink = inputField.value;
-    storeData(url, externalLink);
+    chrome.storage.local.get("AnilistConnect", function (result) {
+      let validate = false;
+      const storedData = result["AnilistConnect"];
+      if (storedData) {
+        storedData.forEach((element) => {
+          if (element.externalLink == inputField.value) {
+            validate = true;
+          }
+        });
+      }
+      if (validate == true) {
+        inputErrorTooltip.textContent = "Link Already Connected";
+      } else {
+        const data = {
+          url: url,
+          externalLink: externalLink,
+        };
+        dataArray.push(data);
+        storeData(dataArray);
+      }
+    });
   }
 }
 
@@ -50,37 +74,66 @@ function retrieveData() {
   chrome.storage.local.get("AnilistConnect", function (result) {
     const storedData = result["AnilistConnect"];
     console.log("Retrieved stored data:", storedData);
-
     if (storedData) {
-      const storedUrl = storedData.url;
-      const storedExternalLink = storedData.externalLink;
-      var json = JSON.stringify(storedData);
-      alert(json);
-      return storedData;
-      
+      dataArray = storedData;
+      var select_form = document.getElementById("dropdown");
+      select_form.innerHTML = "";
+      storedData.forEach((data) => {
+        var option = document.createElement("option");
+        option.value = data.url;
+        option.textContent = data.externalLink;
+        select_form.appendChild(option);
+      });
     }
   });
 }
 
 // Function to store data
-function storeData(url, externalLink) {
-  const data = {
-    url: url,
-    externalLink: externalLink,
-  };
-  chrome.storage.local.set({ AnilistConnect: data }, function () {
-    document.getElementById("inputError").textContent = "Link Connected Successfully";
-    retrieveData(); 
+function storeData(dataArray) {
+  chrome.storage.local.set({ AnilistConnect: dataArray }, function () {
+    document.getElementById("inputError").textContent =
+      "Link Connected Successfully";
+    retrieveData();
   });
 }
 
-window.onload = function() {
-  const storedData = retrieveData();
-  if (storedData) {
-    const storedUrl = storedData.url;
-    const storedExternalLink = storedData.externalLink;
-    alert("AniList Link: " + storedUrl + "\n" + "External Link: " + storedExternalLink);
-    document.getElementById("anilist_link").textContent = storedUrl;
-    document.getElementById("input").value = storedExternalLink;
-  }
+function clearStore() {
+  chrome.storage.local.remove("AnilistConnect", function () {
+    console.log("Stored data removed");
+    // Clear the dropdown options
+    var selectForm = document.getElementById("dropdown");
+    selectForm.innerHTML = "";
+    var option = document.createElement("option");
+    option.value = "...";
+    selectForm.appendChild(option);
+    chrome.storage.local.get("AnilistConnect", function (result) {
+      const storedData = result["AnilistConnect"];
+      if (storedData == undefined) {
+        dataArray = [];
+        const inicialdata = {
+          url: "...",
+          externalLink: "...",
+        };
+        dataArray.push(inicialdata);
+        chrome.storage.local.set({ AnilistConnect: dataArray }, function () {});
+      }
+    });
+  });
+}
+
+window.onload = function () {
+  chrome.storage.local.get("AnilistConnect", function (result) {
+    const storedData = result["AnilistConnect"];
+    if (storedData) {
+      dataArray = storedData;
+    } else {
+      const inicialdata = {
+        url: "...",
+        externalLink: "...",
+      };
+      dataArray.push(inicialdata);
+      chrome.storage.local.set({ AnilistConnect: dataArray }, function () {});
+    }
+  });
+  retrieveData();
 };
