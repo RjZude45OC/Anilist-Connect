@@ -19,17 +19,9 @@ To install the Anilist Connect Chrome Extension:
 
 ## Usage
 
-1. Navigate to an Anilist anime, manga, or novel page.
+1. Navigate to an Anilist anime, manga page.
 2. Click on the Anilist Connect extension icon in the Chrome toolbar.
 3. Manually enter the external source link in the provided input field.
 4. Click "Save" to link the external source to the Anilist page.
 5. Linked external sources will be stored locally and can be retrieved later.
-
-## Contributing
-
-Contributions are welcome! If you find any bugs or have suggestions for new features, please open an issue or submit a pull request.
-
-## License
-
-This project is licensed under the [MIT License](LICENSE).
 
