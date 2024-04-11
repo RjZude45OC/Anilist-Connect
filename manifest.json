@@ -1,14 +1,19 @@
 {
-    "manifest_version": 3,
-    "name": "Anilist Connect",
-    "description": "Manually link external pages to specific pages on anilist.co",
-    "version": "1.0",
-    "action": {
-      "default_popup": "main.html",
-      "default_icon": "image.png"
-    },
-    "permissions": [
-        "tabs",
-        "storage"
-      ]
-  }
+  "manifest_version": 3,
+  "name": "Anilist Connect",
+  "description": "Link external sources to specific anime/manga on Anilist.",
+  "version": "1.0",
+  "action": {
+      "default_popup": "main.html"
+  },
+  "icons": {
+      "128": "image.png",
+      "48": "image.png",
+      "32": "image.png",
+      "16": "image.png"
+  },
+  "permissions": [
+      "tabs",
+      "storage"
+  ]
+}

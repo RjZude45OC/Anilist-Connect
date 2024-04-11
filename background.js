@@ -2,10 +2,12 @@ const anilist_Check =
   /https?:\/\/(www\.)?anilist\.co\/(anime|manga)\/(\d+)\/([a-zA-Z0-9-]+)/i;
 const inputUrl_Check =
   /[(http(s)?):\/\/(www\.)?a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/i;
+  const domainName = /([a-z0-9A-Z]\.)*[a-z0-9-]+\.([a-z0-9]{2,24})+(\.co\.([a-z0-9]{2,24})|\.([a-z0-9]{2,24}))*/i;
 var dataArray = [];
+let currentTabUrl;
 chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
   var currentTab = tabs[0];
-  let currentTabUrl = currentTab.url;
+  currentTabUrl = currentTab.url;
   var match = currentTabUrl.match(anilist_Check);
   if (match) {
     document.getElementById("anilist_link").textContent = currentTabUrl;
@@ -76,14 +78,15 @@ function retrieveData() {
     console.log("Retrieved stored data:", storedData);
     if (storedData) {
       dataArray = storedData;
-      var select_form = document.getElementById("dropdown");
-      select_form.innerHTML = "";
-      storedData.forEach((data) => {
-        var option = document.createElement("option");
-        option.value = data.url;
-        option.textContent = data.externalLink;
-        select_form.appendChild(option);
-      });
+      return dataArray;
+      // var select_form = document.getElementById("dropdown");
+      // select_form.innerHTML = "";
+      // storedData.forEach((data) => {
+      //   var option = document.createElement("option");
+      //   option.value = data.url;
+      //   option.textContent = data.externalLink;
+      //   select_form.appendChild(option);
+      // });
     }
   });
 }
@@ -94,18 +97,23 @@ function storeData(dataArray) {
     document.getElementById("inputError").textContent =
       "Link Connected Successfully";
     retrieveData();
+    var dropdown = document.querySelector(".dropdown");
+        dropdown.innerHTML = "";
+    showConnectedLinks(dataArray);
   });
 }
 
 function clearStore() {
   chrome.storage.local.remove("AnilistConnect", function () {
     console.log("Stored data removed");
-    // Clear the dropdown options
-    var selectForm = document.getElementById("dropdown");
-    selectForm.innerHTML = "";
-    var option = document.createElement("option");
-    option.value = "...";
-    selectForm.appendChild(option);
+    var inputErrorTooltip = document.getElementById("inputError");
+    inputErrorTooltip.textContent = "Stored data removed";
+    // // Clear the dropdown options
+    // var selectForm = document.getElementById("dropdown");
+    // selectForm.innerHTML = "";
+    // var option = document.createElement("option");
+    // option.value = "...";
+    // selectForm.appendChild(option);
     chrome.storage.local.get("AnilistConnect", function (result) {
       const storedData = result["AnilistConnect"];
       if (storedData == undefined) {
@@ -115,13 +123,49 @@ function clearStore() {
           externalLink: "...",
         };
         dataArray.push(inicialdata);
+        console.log(dataArray);
         chrome.storage.local.set({ AnilistConnect: dataArray }, function () {});
+        var dropdown = document.querySelector(".dropdown");
+        dropdown.innerHTML = "";
+        showConnectedLinks(dataArray);
       }
     });
   });
 }
+function showConnectedLinks(dataArray) {
+  if (dataArray.length > 1) {
+    for (let index = 1; index < dataArray.length; index++) {
+      let anilistUrl = dataArray[index].url;
+      if (currentTabUrl === anilistUrl) {
+        let endUrl = dataArray[index].externalLink;
+        var anchor = document.createElement("a");
+        anchor.href = endUrl;
+        anchor.target = "_blank";
+
+        var dropdownItem = document.createElement("div");
+        dropdownItem.className = "dropdown_item";
+
+        var img = document.createElement("img");
+        var match = endUrl.match(domainName);
+        let imageLink = match[0];
+        img.src = "https://"+imageLink+"/favicon.ico";
+        img.alt = "image";
+        img.id = "dropdown";
+
+        dropdownItem.appendChild(img);
+
+        anchor.appendChild(dropdownItem);
+
+        var dropdown = document.querySelector(".dropdown");
+
+        dropdown.appendChild(anchor);
+      }
+    }
+  }
+}
 
 window.onload = function () {
+  retrieveData();
   chrome.storage.local.get("AnilistConnect", function (result) {
     const storedData = result["AnilistConnect"];
     if (storedData) {
@@ -134,6 +178,6 @@ window.onload = function () {
       dataArray.push(inicialdata);
       chrome.storage.local.set({ AnilistConnect: dataArray }, function () {});
     }
+    showConnectedLinks(dataArray);
   });
-  retrieveData();
 };

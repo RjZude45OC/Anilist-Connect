@@ -12,22 +12,25 @@
         <img src="https://anilist.co/favicon.ico" alt="" />
         <h2>Connect</h2>
       </div>
-      <div class="links">
+      <div class="links_container">
         <h3>Anilist:</h3>
-        <p id="anilist_link"></p>
+        <div class="links">
+          <p id="anilist_link"></p>
+        </div>
+        <form class="link_form" id="link_form">
+          <h3>Link to connect:</h3>
+          <input type="text" id="input" />
+          <button type="submit" id="button">save</button>
+          <span id="inputError" class="error-tooltip"></span>
+        </form>
       </div>
-      <form class="link_form" id="link_form">
-        <h3>Link to connect:</h3>
-        <input type="text" id="input" />
-        <button type="submit" id="button">save</button>
-        <span id="inputError" class="error-tooltip"></span>
-      </form>
-      <form class="dropdown" action="">
-        <label for="dropdown">Connected:</label>
-        <select name="" id="dropdown">
-        </select>
+
+      <div class="dropdown_container">
+        <h3>Connected:</h3>
+        <div class="dropdown">
+        </div>
         <button type="reset" id="remove">Remove all</button>
-      </form>
+      </div>
     </div>
   </body>
   <script src="background.js"></script>
